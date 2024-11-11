@@ -72,13 +72,13 @@ Configuration is handled through environment variables with sensible defaults:
 
 All endpoints return JSON responses in the following format:
 
-[,json]
+[,javascript]
 ----
 {
   "success": boolean,       // (optional) operation success status
   "is_running": boolean,    // current server running status
   "message": string,        // human-readable status message
-  "error": string          // (optional) error message if something went wrong
+  "error": string           // (optional) error message if something went wrong
 }
 ----
 
@@ -91,8 +91,7 @@ All endpoints return JSON responses in the following format:
 
 == Future Work
 
-It would be nice to support:
-* Multiple Minecraft server versions, with the default being the latest
-* Managed update of Minecraft server version
+* Support selecting from multiple Minecraft server versions, with the default being the latest
+* Manage update of Minecraft server version
 * Get last n lines of Minecraft server logs
 * Send arbitrary commands to the Minecraft server
