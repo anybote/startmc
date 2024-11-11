@@ -10,10 +10,6 @@ import (
 	"strings"
 )
 
-// Possible other features:
-// * default to latest version in the servers/ dir
-//   or accept path parameter which is server version to toggle
-
 type config struct {
 	javaPath   string
 	port       string
@@ -29,10 +25,10 @@ type Response struct {
 }
 
 var cfg = config{
-	javaPath:   getEnv("JAVA_PATH", "java"),
-	port:       getEnv("PORT", "80"),
-	serverPath: getEnv("SERVER_PATH", "/mnt/bunstorage/minecraft/servers/1.21.3/"),
-	screenName: getEnv("SCREEN_NAME", "mcserver"),
+	javaPath:   getEnv("STARTMC_JAVA_PATH", "java"),
+	port:       getEnv("STARTMC_PORT", "80"),
+	serverPath: getRequiredEnv("MC_SERVER_PATH"),
+	screenName: getEnv("MC_SCREEN_NAME", "mcserver"),
 }
 
 func main() {
@@ -155,6 +151,15 @@ func sendJSONResponse(w http.ResponseWriter, response any, statusCode int) {
 	if err := json.NewEncoder(w).Encode(response); err != nil {
 		log.Printf("Error encoding JSON response: %v", err)
 	}
+}
+
+func getRequiredEnv(key string) string {
+	val, exists := os.LookupEnv(key)
+	if !exists {
+		log.Fatalf("missing required env var %s", key)
+	}
+
+	return val
 }
 
 func getEnv(key, fallback string) string {

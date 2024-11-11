@@ -1,0 +1,98 @@
+:showtitle:
+:toc: left
+:icons: font
+
+= startmc
+Simple webserver for managing minecraft servers.
+
+A lightweight HTTP server written in Go that provides REST endpoints to start, stop, and check the status of a Minecraft server running in a screen session.
+
+== Installing
+
+1. Ensure you have Go 1.21 or later installed
+2. Clone the repository
+3. Update the MC_SERVER_PATH env var in the startmc.service file
+4. Install using one of these methods:
+   * Run `make refresh` to install both the server and the systemd unit, you will be prompted for your password (this allows the server to restart if your computer restarts)
+   * Run `make run` to run directly without installing, use the STARTMC_PORT env var and set it to 8080 if you don't want to run as root
+
+== Uninstalling
+
+1. Clone the repository
+2. Use the make target:
+   * Run `make uninstall` to clean and remove all files and units, you will be prompted for your password
+
+== Usage
+
+The server provides a simple HTTP interface to manage your Minecraft server instance.
+
+Run the Minecraft server once first and agree to the EULA before using this utility to manage it.
+
+=== Configuration
+
+Configuration is handled through environment variables with sensible defaults:
+
+[cols="1,1,2"]
+|===
+|Variable |Default |Description
+
+|STARTMC_JAVA_PATH
+|java
+|Path to Java executable
+
+|STARTMC_PORT
+|80
+|Port for the HTTP server to listen on
+
+|MC_SERVER_PATH
+|N/A (required)
+|Path to Minecraft server directory
+
+|MC_SCREEN_NAME
+|mcserver
+|Name of the screen session
+|===
+
+=== Endpoints
+
+[cols="1,1,2"]
+|===
+|Endpoint |Method |Description
+
+|/
+|GET
+|Toggle server state (starts if stopped, stops if running)
+
+|/status
+|GET
+|Get current server status
+|===
+
+==== Response Format
+
+All endpoints return JSON responses in the following format:
+
+[,json]
+----
+{
+  "success": boolean,       // (optional) operation success status
+  "is_running": boolean,    // current server running status
+  "message": string,        // human-readable status message
+  "error": string          // (optional) error message if something went wrong
+}
+----
+
+== Dependencies
+
+* Go 1.21+
+* screen (Unix utility)
+* Java Runtime Environment for running the Minecraft server
+* Minecraft server jar file (EULA should already be agreed to)
+
+== Future Work
+
+It would be nice to support:
+* Multiple Minecraft server versions, with the default being the latest
+* Managed update of Minecraft server version
+* Get last n lines of Minecraft server logs
+* Send arbitrary commands to the Minecraft server

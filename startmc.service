@@ -1,0 +1,14 @@
+[Unit]
+Description=startmc
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=0
+
+[Service]
+ExecStart=/usr/local/bin/startmc
+Environment=MC_SERVER_PATH=REPLACE_ME
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
